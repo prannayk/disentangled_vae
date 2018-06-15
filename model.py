@@ -130,11 +130,11 @@ class VAE(object):
   def _create_recognition_network(self, x, reuse=False):
     with tf.variable_scope("rec", reuse=reuse) as scope:
       # [filter_height, filter_width, in_channels, out_channels]
-      W_conv1, b_conv1 = self._conv2d_weight_variable([4, 4, 1,  64], "conv1")
-      W_conv2, b_conv2 = self._conv2d_weight_variable([4, 4, 64, 64], "conv2")
-      W_conv3, b_conv3 = self._conv2d_weight_variable([4, 4, 64, 64], "conv3")
-      W_conv4, b_conv4 = self._conv2d_weight_variable([4, 4, 64, 64], "conv4")
-      W_conv5, b_conv5 = self._conv2d_weight_variable([4, 4, 64, 32], "conv5")
+      W_conv1, b_conv1 = self._conv2d_weight_variable([4, 4, 1,  32], "conv1")
+      W_conv2, b_conv2 = self._conv2d_weight_variable([4, 4, 32, 32], "conv2")
+      W_conv3, b_conv3 = self._conv2d_weight_variable([4, 4, 32, 32], "conv3")
+      W_conv4, b_conv4 = self._conv2d_weight_variable([4, 4, 32, 32], "conv4")
+      #W_conv5, b_conv5 = self._conv2d_weight_variable([4, 4, 64, 32], "conv5")
       W_fc1, b_fc1     = self._fc_weight_variable([4*4*32, 256], "fc1")
       W_fc2, b_fc2     = self._fc_weight_variable([256, 256], "fc2")
       W_fc3, b_fc3     = self._fc_weight_variable([256, self.z_dim],  "fc3")
@@ -145,9 +145,9 @@ class VAE(object):
       h_conv2 = tf.nn.relu(self._conv2d(h_conv1,    W_conv2, 2) + b_conv2) # (16, 16)
       h_conv3 = tf.nn.relu(self._conv2d(h_conv2,    W_conv3, 2) + b_conv3) # (8, 8)
       h_conv4 = tf.nn.relu(self._conv2d(h_conv3,    W_conv4, 2) + b_conv4) # (4, 4)
-      h_conv5 = tf.nn.relu(self._conv2d(h_conv4,    W_conv5, 1) + b_conv5) # (4, 4)
-      h_conv5_flat = tf.reshape(h_conv5, [-1, 4*4*32])
-      h_fc1 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc1) + b_fc1)
+      #h_conv5 = tf.nn.relu(self._conv2d(h_conv4,    W_conv5, 1) + b_conv5) # (4, 4)
+      h_conv4_flat = tf.reshape(h_conv4, [-1, 4*4*32])
+      h_fc1 = tf.nn.relu(tf.matmul(h_conv4_flat, W_fc1) + b_fc1)
       h_fc2 = tf.nn.relu(tf.matmul(h_fc1,        W_fc2) + b_fc2)
       z_mean         = tf.matmul(h_fc2, W_fc3) + b_fc3 # mean of the gaussian
       z_log_sigma_sq = tf.matmul(h_fc2, W_fc4) + b_fc4 # variance of the gaussian
@@ -160,21 +160,21 @@ class VAE(object):
       W_fc2, b_fc2 = self._fc_weight_variable([256, 4*4*32], "fc2")
 
       # [filter_height, filter_width, output_channels, in_channels]
-      W_deconv1, b_deconv1 = self._conv2d_weight_variable([4, 4, 64, 32], "deconv1", deconv=True)
-      W_deconv2, b_deconv2 = self._conv2d_weight_variable([4, 4, 64, 64], "deconv2", deconv=True)
-      W_deconv3, b_deconv3 = self._conv2d_weight_variable([4, 4, 64, 64], "deconv3", deconv=True)
-      W_deconv4, b_deconv4 = self._conv2d_weight_variable([4, 4, 64, 64], "deconv4", deconv=True)
-      W_deconv5, b_deconv5 = self._conv2d_weight_variable([4, 4,  1, 64], "deconv5", deconv=True)
+      W_deconv1, b_deconv1 = self._conv2d_weight_variable([4, 4, 32, 32], "deconv1", deconv=True)
+      W_deconv2, b_deconv2 = self._conv2d_weight_variable([4, 4, 32, 32], "deconv2", deconv=True)
+      W_deconv3, b_deconv3 = self._conv2d_weight_variable([4, 4, 32, 32], "deconv3", deconv=True)
+      W_deconv4, b_deconv4 = self._conv2d_weight_variable([4, 4, 1, 32], "deconv4", deconv=True)
+#      W_deconv5, b_deconv5 = self._conv2d_weight_variable([4, 4,  1, 64], "deconv5", deconv=True)
 
       h_fc1 = tf.nn.relu(tf.matmul(z,     W_fc1) + b_fc1)
       h_fc2 = tf.nn.relu(tf.matmul(h_fc1, W_fc2) + b_fc2)
       h_fc2_reshaped = tf.reshape(h_fc2, [-1, 4, 4, 32])
-      h_deconv1   = tf.nn.relu(self._deconv2d(h_fc2_reshaped, W_deconv1,  4,  4, 1) + b_deconv1)
-      h_deconv2   = tf.nn.relu(self._deconv2d(h_deconv1,      W_deconv2,  4,  4, 2) + b_deconv2)
-      h_deconv3   = tf.nn.relu(self._deconv2d(h_deconv2,      W_deconv3,  8,  8, 2) + b_deconv3)
-      h_deconv4   = tf.nn.relu(self._deconv2d(h_deconv3,      W_deconv4, 16, 16, 2) + b_deconv4)
-      h_deconv5   =            self._deconv2d(h_deconv4,      W_deconv5, 32, 32, 2) + b_deconv5
-      x_out_logit = tf.reshape(h_deconv5, [-1, 64*64*1])
+      h_deconv1   = tf.nn.relu(self._deconv2d(h_fc2_reshaped, W_deconv1,  4,  4, 2) + b_deconv1)
+      h_deconv2   = tf.nn.relu(self._deconv2d(h_deconv1,      W_deconv2,  8,  8, 2) + b_deconv2)
+      h_deconv3   = tf.nn.relu(self._deconv2d(h_deconv2,      W_deconv3, 16, 16, 2) + b_deconv3)
+      h_deconv4   =             self._deconv2d(h_deconv3,      W_deconv4, 32, 32, 2) + b_deconv4
+#      h_deconv5   =            self._deconv2d(h_deconv4,      W_deconv5, 32, 32, 2) + b_deconv5
+      x_out_logit = tf.reshape(h_deconv4, [-1, 64*64*1])
       return x_out_logit
 
 

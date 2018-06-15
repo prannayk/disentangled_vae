@@ -126,7 +126,7 @@ def axis_walk_save(sess, model, images, step=0, directory="default"):
   print(x_reconstruct.shape)
   images = np.squeeze(np.array (images))
   images = np.expand_dims(images, 1)
-  images = np.repeat(images, repeats=15, axis=1)
+  images = np.repeat(images, repeats=model.z_dim, axis=1)
   images = np.expand_dims(images, 2)
   print(images.shape)
   x_reconstruct = np.concatenate([images, x_reconstruct], axis=2)
