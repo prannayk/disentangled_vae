@@ -40,7 +40,7 @@ class VAE(object):
     self.mode = mode
     self.z_dim = z_dim
     self.perturb_val = perturb_val
-    print(self.z_dim)
+    self.K = 4
 
     # Create autoencoder network
     self._create_network()
@@ -174,7 +174,6 @@ class VAE(object):
       h_deconv3   = tf.nn.relu(self._deconv2d(h_deconv2,      W_deconv3,  8,  8, 2) + b_deconv3)
       h_deconv4   = tf.nn.relu(self._deconv2d(h_deconv3,      W_deconv4, 16, 16, 2) + b_deconv4)
       h_deconv5   =            self._deconv2d(h_deconv4,      W_deconv5, 32, 32, 2) + b_deconv5
-      print(h_deconv5.shape)
       x_out_logit = tf.reshape(h_deconv5, [-1, 64*64*1])
       return x_out_logit
 
@@ -254,8 +253,8 @@ class VAE(object):
         self.perturb_var_tensor = tf.convert_to_tensor(self.perturb_var, dtype=tf.float64)
         self.delta = [tf.Variable(np.identity(self.z_dim)[i], trainable=False) for i in range(self.z_dim)]
         self.delta_tensor = map(lambda x : tf.convert_to_tensor(x, dtype=tf.float64), self.delta)
-        self.z_perturb = [tf.cast(self.z, dtype=tf.float64) + (self.perturb_var_tensor * self.delta_tensor[i]) for i in range(self.z_dim)]
-        self.x_perturb = [tf.nn.sigmoid(self._create_generator_network(tf.cast(self.z_perturb[i], tf.float32), reuse=True)) for i in range(self.z_dim)]
+        self.z_perturb = [[tf.cast(self.z, dtype=tf.float64) + ((j+1)* self.perturb_var_tensor * self.delta_tensor[i]) for i in range(self.z_dim)] for j in range(self.K)]
+        self.x_perturb = [[tf.nn.sigmoid(self._create_generator_network(tf.cast(self.z_perturb[j][i], tf.float32), reuse=True)) for i in range(self.z_dim)] for j in range(self.K)]
     sess.run(tf.variables_initializer([self.perturb_var] + self.delta))
 
   def reconstruct(self, sess, xs):

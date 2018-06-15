@@ -10,7 +10,7 @@ import os
 from scipy.misc import imsave
 
 from model import VAE
-from data_manager import many_example_random_pair, single_factor_changed_one_example_generated_pair, DataManager
+from data_manager import many_example_random_pair, single_factor_changed_one_example_generated_pair
 
 tf.app.flags.DEFINE_integer("epoch_size", 2000, "epoch size")
 tf.app.flags.DEFINE_integer("batch_size", 64, "batch size")
@@ -96,15 +96,14 @@ def autoencoded_sample_save(sess, model, manager, flags, directory="default", nu
   np.savez_compressed("{1}/{0}/sample".format(step, directory, flags.reconstr),x_tot)
 
 def axis_walk_save(sess, model, images, step=0, directory="default"):
-  x_reconstruct = np.array(model.axis_walk(sess, images))
-  print(x_reconstruct.shape)
-  x_reconstruct = x_reconstruct.reshape([model.K, model.z_dim, images.shape[0],64,64])
+  x_reconstruct = np.array(model.axis_walk(sess, images)).reshape([model.K, model.z_dim, images.shape[0],64,64])
   print(x_reconstruct.shape)
   x_reconstruct = np.swapaxes(x_reconstruct, 0,1)
   x_reconstruct = np.swapaxes(x_reconstruct, 1,2)
   x_reconstruct = np.swapaxes(x_reconstruct, 2,3)
-#  x_reconstruct = np.swapaxes(x_reconstruct, 3,4)
+  x_reconstruct = np.swapaxes(x_reconstruct, 3,4)
   x_reconstruct = x_reconstruct.reshape([model.z_dim, images.shape[0], 64,model.K*64])
+  print(x_reconstruct.shape)
   images = model.reconstruct(sess, images)
   if not os.path.exists(flags.reconstr):
       os.mkdir(flags.reconstr)
@@ -119,17 +118,16 @@ def axis_walk_save(sess, model, images, step=0, directory="default"):
             os.mkdir(os.path.join(flags.reconstr, str(j)))
         reconstr_img = np.concatenate([org_img, reconstr_img], axis=1)
         imsave("{0}/{2}/reconstr_{1}.png".format(flags.reconstr,i,j),reconstr_img)
-  x_reconstruct = x_reconstruct.reshape([model.z_dim, images.shape[0],64,model.K,64])
-  x_reconstruct = np.swapaxes(x_reconstruct, 0, 1)
-  x_reconstruct = np.swapaxes(x_reconstruct, 2, 3)
-  x_reconstruct = x_reconstruct.reshape([images.shape[0],model.z_dim, model.K, 64,64])
-  print(x_reconstruct.shape)
-  images = np.squeeze(np.array (images))
+  images = np.array (images)
   images = np.expand_dims(images, 1)
+  x_reconstruct = x_reconstruct.reshape([model.z_dim, images.shape[0],64,64, model.K])
+  x_reconstruct = np.swapaxes(x_reconstruct, 0, 1)
+  x_reconstruct = np.swapaxes(x_reconstruct, 3, 4)
+  x_reconstruct = np.swapaxes(x_reconstruct, 2, 3)
+  x_reconstruct = x_reconstruct.reshape([images.shape[0], 64,64,model.K, model.z_dim])
   images = np.repeat(images, repeats=15, axis=1)
-  images = np.expand_dims(images, 2)
-  print(images.shape)
   x_reconstruct = np.concatenate([images, x_reconstruct], axis=2)
+  print(x_reconstruct.shape)
   np.save("{2}/{1}/reconstructed_{0}".format(step, directory, flags.reconstr),x_reconstruct)
 
 
@@ -224,7 +222,7 @@ def main(argv):
     save_labels(labels)
   else:
     print("Loading data")
-    manager = DataManager()
+    manager = many_example_random_pair()
     manager.load()
     print("Data load complete")
     model.init_run(sess)
