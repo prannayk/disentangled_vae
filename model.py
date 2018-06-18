@@ -254,7 +254,8 @@ class VAE(object):
         self.delta = [tf.Variable(np.identity(self.z_dim)[i], trainable=False) for i in range(self.z_dim)]
         self.delta_tensor = map(lambda x : tf.convert_to_tensor(x, dtype=tf.float64), self.delta)
         self.z_perturb = [[tf.cast(self.z, dtype=tf.float64) + ((j+1)* self.perturb_var_tensor * self.delta_tensor[i]) for i in range(self.z_dim)] for j in range(self.K)]
-        self.x_perturb = [[tf.nn.sigmoid(self._create_generator_network(tf.cast(self.z_perturb[j][i], tf.float32), reuse=True)) for i in range(self.z_dim)] for j in range(self.K)]
+        self.z_perturb += [[tf.cast(self.z, dtype=tf.float64) - ((j+1)* self.perturb_var_tensor * self.delta_tensor[i]) for i in range(self.z_dim)] for j in range(self.K)]
+        self.x_perturb = [[tf.nn.sigmoid(self._create_generator_network(tf.cast(self.z_perturb[j][i], tf.float32), reuse=True)) for i in range(self.z_dim)] for j in range(2*self.K)]
     sess.run(tf.variables_initializer([self.perturb_var] + self.delta))
 
   def reconstruct(self, sess, xs):
