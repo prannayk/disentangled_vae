@@ -29,6 +29,7 @@ tf.app.flags.DEFINE_string("mode", "betavae", "for switching between VAE and Bet
 tf.app.flags.DEFINE_integer("z_dim", 10, "Latent dimension")
 tf.app.flags.DEFINE_string("reconstr", "reconstr_img", "Directory for storing reconstructed images")
 tf.app.flags.DEFINE_float("perturbration", 1e-1, "size of pertubration for performing axis walks")
+tf.app.flags.DEFINE_integer("K", 4, "number of steps in latent walk")
 
 flags = tf.app.flags.FLAGS
 
@@ -201,7 +202,8 @@ def main(argv):
           learning_rate=flags.learning_rate,
           mode=flags.mode,
           z_dim = flags.z_dim,
-          perturb_val=flags.perturbration)
+          perturb_val=flags.perturbration,
+          K = flags.K)
 
   sess.run(tf.global_variables_initializer())
 

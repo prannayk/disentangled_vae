@@ -32,7 +32,8 @@ class VAE(object):
                learning_rate=5e-4,
                mode="betavae",
                z_dim=10,
-               perturb_val = 1e-1):
+               perturb_val = 1e-1,
+               K=4):
     self.gamma = gamma
     self.capacity_limit = capacity_limit
     self.capacity_change_duration = capacity_change_duration
@@ -40,7 +41,7 @@ class VAE(object):
     self.mode = mode
     self.z_dim = z_dim
     self.perturb_val = perturb_val
-    self.K = 4
+    self.K = K
 
     # Create autoencoder network
     self._create_network()
