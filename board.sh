@@ -1,3 +1,3 @@
 #!/bin/sh
 
-tensorboard --logdir ./log
+tensorboard --logdir ./log --port 6000

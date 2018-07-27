@@ -1,0 +1,82 @@
+Iteration 100: 
+    Autoencoder loss (train) 42786.585938
+    Reconstruction loss (train) 42464.492188
+    Discriminator loss (train) -0.693691
+Iteration 100: 
+    Autoencoder loss (train) 39558.359375
+    Reconstruction loss (train) 37982.269531
+    Discriminator loss (train) -0.689452
+Iteration 100: 
+    Autoencoder loss (train) 41382.003906
+    Reconstruction loss (train) 41472.796875
+    Discriminator loss (train) -0.689441
+Iteration 100: 
+    Autoencoder loss (train) 43086.371094
+    Reconstruction loss (train) 43864.015625
+    Discriminator loss (train) -0.688358
+    Autoencoder loss (test) 387391.468750
+    Reconstruction loss (test) 385419.250000
+    Discriminator loss (test) -0.696210
+Iteration 200: 
+    Autoencoder loss (train) 25663.212891
+    Reconstruction loss (train) 28236.468750
+    Discriminator loss (train) -0.693922
+    Autoencoder loss (test) 229920.453125
+    Reconstruction loss (test) 228785.500000
+    Discriminator loss (test) -0.694634
+Iteration 300: 
+    Autoencoder loss (train) 18478.101562
+    Reconstruction loss (train) 18197.876953
+    Discriminator loss (train) -0.695288
+    Autoencoder loss (test) 167947.140625
+    Reconstruction loss (test) 167928.078125
+    Discriminator loss (test) -0.693911
+Iteration 400: 
+    Autoencoder loss (train) 19192.974609
+    Reconstruction loss (train) 18747.429688
+    Discriminator loss (train) -0.693053
+    Autoencoder loss (test) 160064.265625
+    Reconstruction loss (test) 159587.906250
+    Discriminator loss (test) -0.693305
+Iteration 500: 
+    Autoencoder loss (train) 17777.521484
+    Reconstruction loss (train) 17643.218750
+    Discriminator loss (train) -0.681565
+    Autoencoder loss (test) 154390.984375
+    Reconstruction loss (test) 154235.781250
+    Discriminator loss (test) -0.696218
+Iteration 600: 
+    Autoencoder loss (train) 18040.253906
+    Reconstruction loss (train) 17898.957031
+    Discriminator loss (train) -0.632783
+    Autoencoder loss (test) 153304.250000
+    Reconstruction loss (test) 153406.453125
+    Discriminator loss (test) -0.708403
+Iteration 700: 
+    Autoencoder loss (train) 16271.966797
+    Reconstruction loss (train) 16180.215820
+    Discriminator loss (train) -0.630525
+    Autoencoder loss (test) 149504.703125
+    Reconstruction loss (test) 149604.140625
+    Discriminator loss (test) -0.736682
+Iteration 800: 
+    Autoencoder loss (train) 16828.814453
+    Reconstruction loss (train) 16787.949219
+    Discriminator loss (train) -0.619857
+    Autoencoder loss (test) 143799.812500
+    Reconstruction loss (test) 143499.656250
+    Discriminator loss (test) -0.767461
+Iteration 900: 
+    Autoencoder loss (train) 12419.953125
+    Reconstruction loss (train) 12296.629883
+    Discriminator loss (train) -0.199054
+    Autoencoder loss (test) 115502.398438
+    Reconstruction loss (test) 115199.218750
+    Discriminator loss (test) -1.579781
+Iteration 1000: 
+    Autoencoder loss (train) 12100.107422
+    Reconstruction loss (train) 11931.342773
+    Discriminator loss (train) -0.261631
+    Autoencoder loss (test) 110678.953125
+    Reconstruction loss (test) 110501.375000
+    Discriminator loss (test) -1.061416

@@ -2,4 +2,8 @@ checkpoints*/*
 *.pyc
 log/*
 disentangle_img
-
+reconstr*
+log*
+checkpoint*
+*.tsv
+data*
